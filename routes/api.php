@@ -8,8 +8,10 @@ use App\Http\Controllers\BoletoController;
 use App\Http\Controllers\cartController;
 use App\Http\Controllers\CombosController;
 use App\Http\Controllers\GenerosController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PeliculasController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\SSEController;
 use App\Http\Controllers\usuarioscontroller;
@@ -48,13 +50,6 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
     Route::get ('/activate/{token}', [AuthController::class ,'activate'])->name('activate');
-});
-Route::prefix('cart')->group(function () {
-    Route::get('/', [cartController::class, 'cart']);
-    Route::post('/add', [cartController::class, 'add']);
-    Route::put('/update', [cartController::class, 'update']);
-    Route::delete('/remove', [cartController::class, 'remove']);
-    Route::delete('/clear', [cartController::class, 'clear']);
 });
 Route::middleware(['auth:api', RoleMiddleware::class . ':3'])->group(function () {
     Route::post('/cines', [cineController::class, 'store'])->name('createCine');
@@ -110,6 +105,8 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':3'])->group(function ()
 });
 
 Route::middleware(['auth:api', RoleMiddleware::class . ':1,2,3'])->group(function () {
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/peliculas', [PeliculasController::class, 'index'])->name('allpeliculas');
     Route::get('/combos', [CombosController::class, 'index'])->name('allcombos');
     Route::get('/productos', [ProductosController::class, 'index'])->name('allproductos');
@@ -122,6 +119,7 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':1,2,3'])->group(functio
 
 Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () {
     Route::get('/usuarios', [usuarioscontroller::class, 'index'])->name('allusuarios');
+  
     Route::post('/usuarios', [usuarioscontroller::class, 'store'])->name('createusuarios');
     Route::get('/usuarios/{combo}', [usuarioscontroller::class, 'show'])->where('combo', '[0-9]+')->name('showusuarios');
     Route::put('/usuarios/{combo}', [usuarioscontroller::class, 'update'])->where('combo', '[0-9]+')->name('updateusuarios');
@@ -131,6 +129,3 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () 
     Route::post('activateUser/{id}', [usuarioscontroller::class, 'activateUser'])->where('id', '[0-9]+')->name('activateUser');
     Route::post('deactivateUser/{id}', [usuarioscontroller::class, 'deactivateUser'])->where('id', '[0-9]+')->name('deactivateUser');
 });
-Route::resource('posts', PostController::class)->only([
-    'destroy', 'show', 'store', 'update'
- ]);

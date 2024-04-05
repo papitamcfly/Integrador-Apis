@@ -14,25 +14,9 @@ class BoletoController extends Controller
   
     public function index()
     {
-        DB::connection()->enableQueryLog();
-        $boletos = Boleto::all();
         $user = auth()->user();
-        $userId = $user ? $user->id : null;
-    
-        $query = DB::getQueryLog();
-        $query = end($query)['query'];
-    
-
-        $log = new RequestLog;
-        $log->user = $userId;
-        $log->metodo = 'GET';
-        $log->url = request()->fullUrl(); 
-        $log->ip = request()->ip();
-        $log->agent = request()->userAgent();
-        $log->timestamps = now();
-        $log->query = $query; 
-        $log->save();
-        return response()->json($boletos, 200);
+        $boletos = Boleto::all();
+        return response()->json(["boletos"=>$boletos,$user], 200);
     }
 
     

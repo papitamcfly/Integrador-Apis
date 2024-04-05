@@ -4,58 +4,37 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use JWTAuth;
 use Darryldecode\Cart\Facades\CartFacade as Cart;
-class cartController extends Controller
+
+class CartController extends Controller
 {
-    public function shop()
+    public function index(Request $request)
     {
-        $products = Product::all();
-       dd($products);
-       return response()->json($products);
+        $user = $request->user();
+        $cart = $user->cart;
+
+        return $cart->items->load('product');
     }
 
-    public function cart()
+    public function store(Request $request)
     {
-        $cartCollection = Cart::getContent();
-        return response()->json($cartCollection);
-    }
-    
-    public function remove(Request $request)
-    {
-        Cart::remove($request->id);
-        return response()->json(['message' => 'Item is removed!']);
-    }
-    
-    public function add(Request $request)
-    {
-        Cart::add([
-            'id' => $request->id,
-            'name' => $request->name,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-            'attributes' => [
-                'image' => $request->img,
-                'slug' => $request->slug
-            ]
-        ]);
-        return response()->json(['message' => 'Item added to cart!']);
-    }
-    
-    public function update(Request $request)
-    {
-        Cart::update($request->id, [
-            'quantity' => [
-                'relative' => false,
-                'value' => $request->quantity
-            ],
-        ]);
-        return response()->json(['message' => 'Cart is updated!']);
-    }
-    
-    public function clear()
-    {
-        Cart::clear();
-        return response()->json(['message' => 'Cart is cleared!']);
-    }
+        $user = $request->user();
+        $cart = $user->cart ?: Cart::create(['user_id' => $user->id]);
 
+        $product = Product::findOrFail($request->input('product_id'));
+        $cartItem = $cart->items()->where('product_id', $product->id)->first();
+
+        if ($cartItem) {
+            $cartItem->quantity += $request->input('quantity', 1);
+            $cartItem->save();
+        } else {
+            $cart->items()->create([
+                'product_id' => $product->id,
+                'quantity' => $request->input('quantity', 1),
+            ]);
+        }
+
+        return response()->json(['message' => 'Product added to cart']);
+    }
 }
