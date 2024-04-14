@@ -25,10 +25,6 @@ class User extends Authenticatable implements JWTSubject
     }
     
 
-    public function boletos()
-    {
-        return $this->hasMany(Boleto::class, 'id_user');
-    }
     
     /**
      * The attributes that are mass assignable.

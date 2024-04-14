@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model as EloquentModel;
 
-class Product extends Model
+class Product extends EloquentModel
 {
     use HasFactory;
-    protected $table = 'products';
-    protected $fillable = ['name', 'description', 'price'];
+    protected $connection = 'mongodb';
+    protected $collection = 'productos';
+    public $timestamps = false;
 }

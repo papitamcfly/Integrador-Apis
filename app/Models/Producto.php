@@ -8,10 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Producto extends Model
 {
     use HasFactory;
-    protected $table = 'productos';
-    protected $fillable = ['nombre','descripcion','precio'];
-    public $timestamps = false;
-    public function combos(){
-        return $this->belongsToMany(Combo::class, 'combo_combo_productos', 'combo_id', 'combo_productos_id');
-    }   
+    protected $table = 'products';
+    protected $fillable = ['name', 'description', 'price'];
 }

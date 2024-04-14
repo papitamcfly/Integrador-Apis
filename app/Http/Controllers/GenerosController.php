@@ -145,7 +145,7 @@ class GenerosController extends Controller
         }
 
         $Genero->delete();
-        event(new FuncionActualizada($Genero));
+
         $user = auth()->user();
         $userId = $user ? $user->id : null;
         $query = DB::getQueryLog();

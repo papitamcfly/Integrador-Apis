@@ -3,15 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
+use Jenssegers\Mongodb\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['customer_id'];
+    protected $connection = 'mongodb';
+    protected $collection = 'orden';
+    public $timestamps = false;
 
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
 }

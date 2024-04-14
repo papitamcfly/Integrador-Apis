@@ -92,8 +92,8 @@ return [
         ],
         'mongodb' => [
             'driver' => 'mongodb',
-            'dsn' => env('DB_URI', 'mongodb+srv://papitamcfly1234:papitamanxD12>@cines.98d9swj.mongodb.net/?retryWrites=true&w=majority&appName=Cines'),
-            'database' => 'logs',
+            'dsn' => env('DB_URI', 'mongodb://Integradora:Buenasnoches123@ec2-3-22-108-25.us-east-2.compute.amazonaws.com,ec2-3-132-224-174.us-east-2.compute.amazonaws.com,ec2-3-13-120-87.us-east-2.compute.amazonaws.com/?authSource=admin&replicaSet=integradora&connectTimeoutMS=60000'),
+            'database' => 'roboserv',
           ],
     
 
