@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,14 +23,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('users')->insert([
-            'name' => 'emiliano',
-            'email' => 'fehane91@gmail.com',
-            'email_verified_at' => null,
-            'password' => bcrypt('123456'),
-            'rol' => 1, // Asignar el ID del rol correspondiente
-            'is_active' => true,
-            'created_at' => null,
-            'updated_at' => null,
+            [
+                'name' => 'administrador2',
+                'email' => '22170011@uttcampus.edu.mx',
+                'password' => Hash::make('papitaman'), // Encriptar la contraseña
+                'rol' => 3,
+                'is_active' => 1
+            ]
         ]);
     }
 }
