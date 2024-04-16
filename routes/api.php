@@ -64,7 +64,7 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':1,2,3'])->group(functio
     Route::get('/products', [ProductController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders/{estado}', [OrderController::class, 'index'])->name('allordenes');
-
+    Route::post('/orders/sendClient', [OrderController::class, 'mailClient'])->name('sendClient');
     Route::get('/generos', [GenerosController::class, 'index'])->name('allgeneros');
 });
 
