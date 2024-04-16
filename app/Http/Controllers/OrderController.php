@@ -33,6 +33,7 @@ class OrderController extends Controller
         $order->status = "pendiente";
         $order->fecha = $currentDateTime->toDateString();
         $order->hora = $currentDateTime->toTimeString();
+        $order->total = $request->total;
         $order->save();
     
 
