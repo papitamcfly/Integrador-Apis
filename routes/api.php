@@ -64,6 +64,7 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':1,2,3'])->group(functio
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders/{estado}', [OrderController::class, 'index'])->name('allordenes');
     Route::put('/orders/{id}/{estado}', [OrderController::class, 'changestatus'])->where('id', '[0-9]+')->where('estado', '[a-zA-Z]+');
+    Route::post('/orders/sendClient', [OrderController::class, 'mailClient'])->name('sendClient');
     Route::get('/generos', [GenerosController::class, 'index'])->name('allgeneros');
 });
 

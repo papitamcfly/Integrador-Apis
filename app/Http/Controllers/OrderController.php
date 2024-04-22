@@ -9,6 +9,11 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Response;
+use App\Mail\SendEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -100,6 +105,30 @@ class OrderController extends Controller
         event(new GeneroActualizado($order));
 
         return response()->json(['message' => 'Estado de la orden actualizado correctamente'], 200);
+    }
+    function mailClient(Request $request){
+        $date = Carbon::now('America/Mexico_City');
+        $items = $request->input('items');
+        $clientEmail = $request->input('clientEmail');
+        $total = 0;
+        $products = [];
+        foreach ($items as $item) {
+            $product = Product::where('id', $item['product_id'])->first(); // Assuming 'Product' is your model
+            if ($product) {
+                Log::info($product);
+                $price = $product->price * $item['quantity'];
+                $products[] = [
+                    'name' => $product->name,
+                    'quantity' => $item['quantity'],
+                    'price' => $price, // Example: Fetching price as well
+                ];
+                $total += $product->price;
+            }
+        }
+        Log::info($date);
+        Log::info($items);
+        Log::info($clientEmail);
+        Mail::to($clientEmail)->send(new SendEmail($date, $products, $total));
     }
     
 }
