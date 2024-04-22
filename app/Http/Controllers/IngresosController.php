@@ -5,40 +5,94 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Order;
+use Illuminate\Support\Facades\Log;
+use MongoDB\BSON\UTCDateTime;
 
 class IngresosController extends Controller
 {
     public function getIngresos($type){
         $pipeline = [];
         $fecha = Carbon::now('America/Mexico_City');
+        Log::info($fecha);
         if($type == "PorDia"){
             $pipeline = [
+                ['$lookup' => [
+                    'from' => 'detalleorden',
+                    'localField' => 'id',
+                    'foreignField' => 'order_id',
+                    'as' => 'detalles'
+                ]],
+                ['$unwind' => '$detalles'],
+                ['$lookup' => [
+                    'from' => 'productos',
+                    'localField' => 'detalles.product_id',
+                    'foreignField' => 'id',
+                    'as' => 'producto'
+                ]],
+                ['$unwind' => '$producto'],
                 ['$group' => [
-                    '_id' => $fecha,
-                    'totalIngresos' => ['$sum' => '$total'],
-                ]]
+                    '_id' => ['fecha' => '$fecha'],
+                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                ]],
+                ['$sort' => ['_id' => -1]]
             ];
         }
-        else if ($type == 'Por Semana') {
+        else if ($type == 'PorSemana') {
             $pipeline = [
+                ['$lookup' => [
+                    'from' => 'detalleorden',
+                    'localField' => 'id',
+                    'foreignField' => 'order_id',
+                    'as' => 'detalles'
+                ]],
+                ['$unwind' => '$detalles'],
+                ['$lookup' => [
+                    'from' => 'productos',
+                    'localField' => 'detalles.product_id',
+                    'foreignField' => 'id',
+                    'as' => 'producto'
+                ]],
+                ['$unwind' => '$producto'],
                 ['$addFields' => [
-                    'semana' => ['$dateToString' => ['format' => '%Y-%U', 'date' => $fecha]]
+                    'fecha' => ['$toDate' => '$fecha']
+                ]],
+                ['$addFields' => [
+                    'semana' => ['$dateToString' => ['format' => '%U week %Y', 'date' => '$fecha']]
                 ]],
                 ['$group' => [
-                    '_id' => '$semana',
-                    'totalIngresos' => ['$sum' => '$total']
+                    '_id' => ['semana' => '$semana'],
+                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
                 ]],
+                ['$sort' => ['_id' => -1]]
             ];
         }
         else if($type == 'PorMes'){
             $pipeline = [
+                ['$lookup' => [
+                    'from' => 'detalleorden',
+                    'localField' => 'id',
+                    'foreignField' => 'order_id',
+                    'as' => 'detalles'
+                ]],
+                ['$unwind' => '$detalles'],
+                ['$lookup' => [
+                    'from' => 'productos',
+                    'localField' => 'detalles.product_id',
+                    'foreignField' => 'id',
+                    'as' => 'producto'
+                ]],
+                ['$unwind' => '$producto'],
                 ['$addFields' => [
-                    'mes' => ['$substr' => [$fecha, 0, 7]]
+                    'fecha' => ['$toDate' => '$fecha']
+                ]],
+                ['$addFields' => [
+                    'mes' => ['$substr' => ['$fecha', 0, 7]]
                 ]],
                 ['$group' => [
-                    '_id' => '$mes',
-                    'totalIngresos' => ['$sum' => '$total']
-                ]]
+                    '_id' => ['mes' => '$mes'],
+                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                ]],
+                ['$sort' => ['_id' => -1]]
             ];
         }
         $result = Order::raw(function ($collection) use ($pipeline) {
@@ -68,9 +122,10 @@ class IngresosController extends Controller
                 ['$unwind' => '$producto'],
 
                 ['$group' => [
-                    '_id' => ['fecha' => $fecha, 'producto' => '$producto.name'],
+                    '_id' => ['fecha' => '$fecha', 'producto' => '$producto.name'],
                     'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
                 ]],
+                ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
                     '_id' => '$_id.fecha',
                     'productos' => [
@@ -80,9 +135,10 @@ class IngresosController extends Controller
                         ]
                     ],
                 ]],
+                ['$sort' => ['_id' => -1]]
             ];
         }
-        else if ($type == 'Por Semana') {
+        else if ($type == 'PorSemana') {
             $pipeline = [
                 ['$lookup' => [
                     'from' => 'detalleorden',
@@ -99,14 +155,18 @@ class IngresosController extends Controller
                 ]],
                 ['$unwind' => '$producto'],
                 ['$addFields' => [
-                    'semana' => ['$dateToString' => ['format' => '%Y-%U', 'date' => $fecha]]
+                    'fecha' => ['$toDate' => '$fecha']
+                ]],
+                ['$addFields' => [
+                    'semana' => ['$dateToString' => ['format' => '%U week %Y', 'date' => '$fecha']]
                 ]],
                 ['$group' => [
                     '_id' => ['semana' => '$semana', 'producto' => '$producto.name'],
                     'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
                 ]],
+                ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
-                    '_id' => '$_id.fecha',
+                    '_id' => '$_id.semana',
                     'productos' => [
                         '$push' => [
                             'producto' => '$_id.producto',
@@ -114,6 +174,7 @@ class IngresosController extends Controller
                         ]
                     ],
                 ]],
+                ['$sort' => ['_id' => -1]]
             ];
         }
         else if($type == 'PorMes'){
@@ -133,12 +194,26 @@ class IngresosController extends Controller
                 ]],
                 ['$unwind' => '$producto'],
                 ['$addFields' => [
+                    'fecha' => ['$toDate' => '$fecha']
+                ]],
+                ['$addFields' => [
                     'mes' => ['$substr' => ['$fecha', 0, 7]]
                 ]],
                 ['$group' => [
                     '_id' => ['mes' => '$mes', 'producto' => '$producto.name'],
                     'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
                 ]],
+                ['$sort' => ['totalIngresos' => -1]],
+                ['$group' => [
+                    '_id' => '$_id.mes',
+                    'productos' => [
+                        '$push' => [
+                            'producto' => '$_id.producto',
+                            'totalIngresos' => '$totalIngresos'
+                        ]
+                    ],
+                ]],
+                ['$sort' => ['_id' => -1]]
             ];
         }
         $result = Order::raw(function ($collection) use ($pipeline) {
