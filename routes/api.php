@@ -18,6 +18,7 @@ use App\Http\Controllers\usuarioscontroller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\IngresosController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,4 +88,8 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
     Route::delete('/products/{id}/{estado}', [ProductController::class, 'changestatus'])->where('id', '[0-9]+');
 
+});
+Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (){
+    Route::get('/ingresos/{type}', [IngresosController::class, 'getIngresos']);
+    Route::get('/ingresos/productos/{type}', [IngresosController::class, 'getIngresosProductos']);
 });

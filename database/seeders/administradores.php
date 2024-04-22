@@ -21,6 +21,13 @@ class administradores extends Seeder
             'password' => Hash::make('papitaman'), // Encriptar la contraseña
             'rol' => 3,
             'is_active' => 1
+        ],
+        [
+            'name' => 'administradorAri',
+            'email' => 'cottoncandyplaysmc123@gmail.com',
+            'password' => Hash::make('GirlInRed24'), // Encriptar la contraseña
+            'rol' => 3,
+            'is_active' => 1
         ]
     ]);
 }
