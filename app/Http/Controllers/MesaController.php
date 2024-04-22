@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Mesa;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class MesaController extends Controller
 {
@@ -16,12 +17,19 @@ class MesaController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required|integer|unique:mesas',
+        $validator = Validator::make($request->all(), [
             'propietario' => 'required|integer',
-            'indicaciones' => 'nullable|string',
+            'indicaciones' => 'required|string',
+        ], [
+            'propietario.required' => 'El campo propietario es obligatorio.',
+            'indicaciones.required' => 'El campo indicaciones es obligatorio.',
         ]);
 
+        if ($validator->fails()) {
+            return Response::json(['errors' => $validator->errors()], 422);
+        }
+
+        $validatedData = $validator->validated();
         $mesa = new Mesa($validatedData);
         $mesa->save();
 
@@ -37,9 +45,7 @@ class MesaController extends Controller
     public function update(Request $request, $id)
     {
         $mesa = Mesa::findOrFail($id);
-
         $validatedData = $request->validate([
-            'propietario' => 'required|integer',
             'indicaciones' => 'nullable|string',
         ]);
 
