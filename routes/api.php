@@ -61,10 +61,9 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (
 });
 
 Route::middleware(['auth:api', RoleMiddleware::class . ':1,2,3'])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']);
     Route::post('/orders', [OrderController::class, 'store']);
     Route::get('/orders/{estado}', [OrderController::class, 'index'])->name('allordenes');
-
+    Route::put('/orders/{id}/{estado}', [OrderController::class, 'changestatus'])->where('id', '[0-9]+')->where('estado', '[a-zA-Z]+');
     Route::get('/generos', [GenerosController::class, 'index'])->name('allgeneros');
 });
 
@@ -78,12 +77,13 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () 
 Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () {;
 });
 Route::post('/post', [PostController::class, 'store']);
-Route::put('/orders/{id}/{estado}', [OrderController::class, 'changestatus'])->where('id', '[0-9]+')->where('estado', '[a-zA-Z]+');
 
-Route::middleware(['auth:api',RoleMiddleware::class, ':3'])->group(function () {
-    Route::get('/products', [ProductController::class, 'index']); 
+Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (){
+    Route::get('/products/{estado}', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update'])->where('id', '[0-9]+');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->where('id', '[0-9]+');
+    Route::delete('/products/{id}/{estado}', [ProductController::class, 'changestatus'])->where('id', '[0-9]+');
+
 });

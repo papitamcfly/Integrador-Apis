@@ -1,17 +1,25 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
-    public function index(){
-        $products = Product::all();
-        return response()->json($products);
+    public function index($estado){
+        $products = Product::raw(function ($collection) use ($estado) {
+            return $collection->aggregate([
+                [
+                    '$match'=> [
+                        'status'=> $estado 
+                    ]
+                ]
+            ]);
+        });
+        return $products;
     }
 
     public function show($id){
@@ -28,32 +36,32 @@ class ProductController extends Controller
         $nextOrderId = $lastOrder ? $lastOrder->id + 1 : 1;
         
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:50|alpha_num|unique:products',
+            'name' => 'required|string|max:50|alpha_num',
             'description' => 'required|string|max:50',
             'price' => 'required|numeric|min:0.01',
             'img' => 'required|mimes:jpeg,png,jpg|max:2048',
-        ])->withMessages([
+        ], [
             'name.required' => 'El campo nombre es obligatorio.',
             'name.string' => 'El nombre debe ser una cadena de texto.',
             'name.max' => 'El nombre no puede exceder los 50 caracteres.',
             'name.alpha_num' => 'El nombre solo puede contener letras y números.',
             'name.unique' => 'El nombre del producto ya está en uso.',
-        
+            
             'description.required' => 'La descripción es obligatoria.',
             'description.string' => 'La descripción debe ser una cadena de texto.',
             'description.max' => 'La descripción no puede exceder los 50 caracteres.',
-        
+            
             'price.required' => 'El precio es obligatorio.',
             'price.numeric' => 'El precio debe ser un valor numérico.',
             'price.min' => 'El precio no puede ser inferior a 0.01.',
-        
+            
             'img.required' => 'La imagen es obligatoria.',
             'img.mimes' => 'El archivo debe ser una imagen (jpeg, png, jpg).',
             'img.max' => 'La imagen no puede pesar más de 2MB.',
         ]);
-
+        
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            throw new ValidationException($validator); // Lanza una excepción de validación personalizada
         }
 
         $file = $request->file('img');
@@ -66,6 +74,7 @@ class ProductController extends Controller
         $product->name = $request->name;
         $product->img = $url;
         $product->price = $request->price;
+        $product->status = 'activo';
         $product->save();
         return response()->json([
             'message' => 'Product created successfully',
@@ -132,6 +141,16 @@ class ProductController extends Controller
         $product = Product::where('id', $id)->first();
         if($product){
             $product->delete();
+            return response()->json(['message' => 'Product deleted successfully'], 200);
+        }
+        return response()->json(['message' => 'Product not found'], 404);
+    }
+    public function changestatus($id,$estado){
+        $id = intval($id);
+        $product = Product::where('id', $id)->first();
+        if($product){
+            $product->status= $estado ;
+            $product->save();
             return response()->json(['message' => 'Product deleted successfully'], 200);
         }
         return response()->json(['message' => 'Product not found'], 404);
