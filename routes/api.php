@@ -90,7 +90,7 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (
 
 });
 Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (){
-    
+    Route::get('/ingresos/{type}', [IngresosController::class, 'getIngresos']);
     Route::get('/ingresos/productos/{type}', [IngresosController::class, 'getIngresosProductos']);
 });
 Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function () {
@@ -100,5 +100,3 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function 
     Route::put('/mesas/{mesa}', [MesaController::class, 'update'])->name('mesas.update')->where('mesa', '[0-9]+');
     Route::delete('/mesas/{mesa}', [MesaController::class, 'destroy'])->name('mesas.destroy')->where('mesa', '[0-9]+');
 });
-Route::get('/ingresos/{type}', [IngresosController::class, 'getIngresos']);
-Route::get('/ingresos/productos/{type}', [IngresosController::class, 'getIngresosProductos']);
