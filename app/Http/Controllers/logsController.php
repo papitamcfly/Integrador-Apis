@@ -20,13 +20,14 @@ class logsController extends Controller
         $logsbyrobot = Data::raw(function ($collection) use ($mesero) {
             return $collection->aggregate([
                 ['$match' => ['meseroID' => (int)$mesero]], // Filtrar por meseroID
-                ['$sort' => ['ID' => -1]], // Más recientes primero
                 [
                     '$group' => [
                         '_id' => '$identificador',
                         'data' => ['$first' => '$$ROOT']
                     ]
-                ]
+                    ],
+                    ['$sort' => ['_id' => 1]],
+
             ]);
         });
         return response()->json($logsbyrobot);
