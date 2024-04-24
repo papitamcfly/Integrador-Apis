@@ -9,7 +9,7 @@ class logsController extends Controller
 {
     public function index()
     {
-        $logs = Data::all()->sortByDesc('ID');
+        $logs = Data::all();
         return response()->json($logs);
     }
 
