@@ -64,7 +64,7 @@ class IngresosController extends Controller
                     'semana' => ['$dateToString' => ['format' => '%U week %Y', 'date' => '$fecha']]
                 ]],
                 ['$group' => [
-                    '_id' => ['semana' => '$semana'],
+                    '_id' => ['fecha' => '$semana'],
                     'totalIngresos' => ['$sum' => ['$multiply' => [
                         ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
                         ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
@@ -96,7 +96,7 @@ class IngresosController extends Controller
                     'mes' => ['$substr' => ['$fecha', 0, 7]]
                 ]],
                 ['$group' => [
-                    '_id' => ['mes' => '$mes'],
+                    '_id' => ['fecha' => '$mes'],
                     'totalIngresos' => ['$sum' => ['$multiply' => [
                         ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
                         ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
