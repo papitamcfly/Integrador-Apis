@@ -18,7 +18,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #e6f2ff;
+            background-color: #2d2d2d;
         }
 
 
