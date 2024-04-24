@@ -21,6 +21,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\IngresosController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\logsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,3 +111,7 @@ Route::get('/usuarios/{combo}', [usuarioscontroller::class, 'show'])->where('com
 Route::put('/usuarios/{combo}', [usuarioscontroller::class, 'update'])->where('combo', '[0-9]+')->name('updateusuarios');
 Route::delete('/usuarios/{combo}', [usuarioscontroller::class, 'destroy'])->where('combo', '[0-9]+')->name('deleteusuarios');
 });
+
+Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function (){
+    Route::get ('/logs', [logsController::class ,'index']);
+    Route::get ('/logs/{mesero}', [logsController::class ,'showRecent'])->where('mesero', '[0-9]+');});
