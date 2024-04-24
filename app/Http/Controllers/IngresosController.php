@@ -32,7 +32,11 @@ class IngresosController extends Controller
                 ['$unwind' => '$producto'],
                 ['$group' => [
                     '_id' => ['fecha' => '$fecha'],
-                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                    'totalIngresos' => ['$sum' => ['$multiply' => [
+                        ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
+                        ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
+                    ]
+                    ]]
                 ]],
                 ['$sort' => ['_id' => -1]]
             ];
@@ -61,7 +65,10 @@ class IngresosController extends Controller
                 ]],
                 ['$group' => [
                     '_id' => ['semana' => '$semana'],
-                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                    'totalIngresos' => ['$sum' => ['$multiply' => [
+                        ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
+                        ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
+                    ]]]
                 ]],
                 ['$sort' => ['_id' => -1]]
             ];
@@ -90,7 +97,10 @@ class IngresosController extends Controller
                 ]],
                 ['$group' => [
                     '_id' => ['mes' => '$mes'],
-                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                    'totalIngresos' => ['$sum' => ['$multiply' => [
+                        ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
+                        ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
+                    ]]]
                 ]],
                 ['$sort' => ['_id' => -1]]
             ];
@@ -123,7 +133,10 @@ class IngresosController extends Controller
 
                 ['$group' => [
                     '_id' => ['fecha' => '$fecha', 'producto' => '$producto.name'],
-                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                    'totalIngresos' => ['$sum' => ['$multiply' => [
+                        ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
+                        ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
+                    ]]]
                 ]],
                 ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
@@ -162,7 +175,10 @@ class IngresosController extends Controller
                 ]],
                 ['$group' => [
                     '_id' => ['semana' => '$semana', 'producto' => '$producto.name'],
-                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                    'totalIngresos' => ['$sum' => ['$multiply' => [
+                        ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
+                        ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
+                    ]]]
                 ]],
                 ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
@@ -201,7 +217,10 @@ class IngresosController extends Controller
                 ]],
                 ['$group' => [
                     '_id' => ['mes' => '$mes', 'producto' => '$producto.name'],
-                    'totalIngresos' => ['$sum' => ['$multiply' => ['$detalles.quantity', '$producto.price']]]
+                    'totalIngresos' => ['$sum' => ['$multiply' => [
+                        ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
+                        ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
+                    ]]]
                 ]],
                 ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
