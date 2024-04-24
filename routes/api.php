@@ -84,7 +84,7 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () 
 });
 Route::post('/post', [PostController::class, 'store']);
 
-Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (){
+Route::middleware(['auth:api',RoleMiddleware::class . ':1,3'])->group(function (){
     Route::get('/products/{estado}', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show'])->where('id', '[0-9]+');
     Route::post('/products', [ProductController::class, 'store']);
@@ -93,18 +93,18 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (
     Route::delete('/products/{id}/{estado}', [ProductController::class, 'changestatus'])->where('id', '[0-9]+');
 
 });
-Route::middleware(['auth:api',RoleMiddleware::class . ':2,3'])->group(function (){
+Route::middleware(['auth:api',RoleMiddleware::class . ':1,3'])->group(function (){
     Route::get('/ingresos/{type}', [IngresosController::class, 'getIngresos']);
     Route::get('/ingresos/productos/{type}', [IngresosController::class, 'getIngresosProductos']);
 });
-Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function () {
+Route::middleware(['auth:api', RoleMiddleware::class . ':1,3'])->group(function () {
     Route::get('/mesas', [MesaController::class, 'index'])->name('mesas.index');
     Route::post('/mesas', [MesaController::class, 'store'])->name('mesas.store');
     Route::get('/mesas/{mesa}', [MesaController::class, 'show'])->name('mesas.show')->where('mesa', '[0-9]+');
     Route::put('/mesas/{mesa}', [MesaController::class, 'update'])->name('mesas.update')->where('mesa', '[0-9]+');
     Route::delete('/mesas/{mesa}', [MesaController::class, 'destroy'])->name('mesas.destroy')->where('mesa', '[0-9]+');
 });
-Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function () {
+Route::middleware(['auth:api', RoleMiddleware::class . ':1,3'])->group(function () {
 Route::get('/usuarios', [usuarioscontroller::class, 'index'])->name('allusuarios');
 Route::post('/usuarios', [usuarioscontroller::class, 'store'])->name('createusuarios');
 Route::get('/usuarios/{combo}', [usuarioscontroller::class, 'show'])->where('combo', '[0-9]+')->name('showusuarios');
@@ -112,6 +112,6 @@ Route::put('/usuarios/{combo}', [usuarioscontroller::class, 'update'])->where('c
 Route::delete('/usuarios/{combo}', [usuarioscontroller::class, 'destroy'])->where('combo', '[0-9]+')->name('deleteusuarios');
 });
 
-Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function (){
+Route::middleware(['auth:api', RoleMiddleware::class . ':1,3'])->group(function (){
     Route::get ('/logs', [logsController::class ,'index']);
     Route::get ('/logs/{mesero}', [logsController::class ,'showRecent'])->where('mesero', '[0-9]+');});
