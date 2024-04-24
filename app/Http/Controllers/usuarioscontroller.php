@@ -15,25 +15,11 @@ class usuarioscontroller extends Controller
 {
     public function index()
     {
-        DB::connection()->enableQueryLog();
 
         $boletos = User::all();
         $user = auth()->user();
         $userId = $user ? $user->id : null;
     
-        $query = DB::getQueryLog();
-        $query = end($query)['query'];
-    
-
-        $log = new RequestLog;
-        $log->user = $userId;
-        $log->metodo = 'GET';
-        $log->url = request()->fullUrl(); 
-        $log->ip = request()->ip();
-        $log->agent = request()->userAgent();
-        $log->timestamps = now();
-        $log->query = $query; 
-        $log->save();
         return response()->json($boletos, 200);
     }
 
@@ -68,17 +54,6 @@ class usuarioscontroller extends Controller
             ));
         $user = auth()->user();
         $userId = $user ? $user->id : null;
-
-        // Obtener información de la petición
-        $log = new RequestLog;
-        $log->user = $userId;
-        $log->metodo =$request->method();
-        $log->url =$request->fullUrl();
-        $log->ip = $request->ip();
-        $log->agent = $request->userAgent();
-        $log->timestamps = now();
-        $log->datos = $request->all();
-        $log->save();
         return response()->json([
             'message' => 'usuario registrado correctamente. verifica tu correo para activar tu cuenta ', 'user'=>$user
         ],201);
@@ -87,7 +62,6 @@ class usuarioscontroller extends Controller
     
     public function show($id)
     {
-        DB::connection()->enableQueryLog();
 
         $boleto = User::find($id);
 
@@ -97,19 +71,6 @@ class usuarioscontroller extends Controller
         $user = auth()->user();
         $userId = $user ? $user->id : null;
     
-        $query = DB::getQueryLog();
-        $query = end($query)['query'];
-    
-
-        $log = new RequestLog;
-        $log->user = $userId;
-        $log->metodo = 'GET';
-        $log->url = request()->fullUrl(); 
-        $log->ip = request()->ip();
-        $log->agent = request()->userAgent();
-        $log->timestamps = now();
-        $log->query = $query; 
-        $log->save();
         return response()->json($boleto, 200);
     }
 
@@ -162,16 +123,6 @@ class usuarioscontroller extends Controller
 
     $usuario->save();
 
-    // Obtener información de la petición
-    $log = new RequestLog;
-    $log->user = $usuario->id;
-    $log->metodo = $request->method();
-    $log->url = $request->fullUrl();
-    $log->ip = $request->ip();
-    $log->agent = $request->userAgent();
-    $log->timestamps = now();
-    $log->datos = $request->all();
-    $log->save();
 
     return response()->json(['message' => 'usuario actualizado correctamente'], 200);
 }
@@ -181,7 +132,7 @@ class usuarioscontroller extends Controller
     
     public function destroy($id)
     {
-        DB::connection()->enableQueryLog();
+
 
         $boleto = User::find($id);
 
@@ -193,19 +144,6 @@ class usuarioscontroller extends Controller
         $user = auth()->user();
         $userId = $user ? $user->id : null;
     
-        $query = DB::getQueryLog();
-        $query = end($query)['query'];
-    
-
-        $log = new RequestLog;
-        $log->user = $userId;
-        $log->metodo = 'DELETE';
-        $log->url = request()->fullUrl(); 
-        $log->ip = request()->ip();
-        $log->agent = request()->userAgent();
-        $log->timestamps = now();
-        $log->query = $query; 
-        $log->save();
         return response()->json(['message' => 'usuario eliminado correctamente'], 200);
     }
 
