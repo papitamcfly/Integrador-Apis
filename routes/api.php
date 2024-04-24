@@ -114,3 +114,5 @@ Route::delete('/usuarios/{combo}', [usuarioscontroller::class, 'destroy'])->wher
 Route::middleware(['auth:api', RoleMiddleware::class . ':1,3'])->group(function (){
     Route::get ('/logs', [logsController::class ,'index']);
     Route::get ('/logs/{mesero}', [logsController::class ,'showRecent'])->where('mesero', '[0-9]+');});
+    Route::get ('/meseros', [logsController::class ,'MostrarMeseros']);
+    Route::get ('/sensores', [logsController::class ,'MostrarSensores']);

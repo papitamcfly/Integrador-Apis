@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use \App\Models\Data;
+use App\Models\meseros;
+use App\Models\sensores;
 
 class logsController extends Controller
 {
@@ -29,6 +31,13 @@ class logsController extends Controller
         });
         return response()->json($logsbyrobot);
     }
-
+    public function MostrarMeseros(){
+        $meseros = meseros::all();
+        return response()->json($meseros);
+    }
+    public function MostrarSensores(){
+        $meseros = sensores::all();
+        return response()->json($meseros);
+    }
 }
 
