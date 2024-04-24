@@ -80,10 +80,10 @@ class usuarioscontroller extends Controller
     $validator = Validator::make($request->all(), [
         'name' => 'required',
         'email' => [
-            'required',
+            
             'string',
             'email',
-            Rule::unique('users')->ignore($id),
+            
         ],
         'password' => 'sometimes|string|confirmed|min:6',
         'rol' => 'required|exists:roles,id',
