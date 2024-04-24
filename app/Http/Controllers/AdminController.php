@@ -50,4 +50,56 @@ class AdminController extends Controller
             'message' => 'usuario registrado correctamente. verifica tu correo para activar tu cuenta ', 'user'=>$user
         ],201);
     }
+    public function login(Request $request)
+    {
+        // Validar las credenciales
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+    
+        // Si la validación falla, devolver los errores
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
+        // Extraer las credenciales de la solicitud
+        $user = User::where('email', $request->email)->first();
+        log::info($user);
+
+        // Intentar autenticar al usuario con las credenciales
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['error' => 'Credenciales no válidas'], 401);
+        }
+        if($user->rol ==1){
+            return response()->json(['error' => 'Acceso negado, tienes que ser Administrador'], 401);
+        }else{
+            if (!$user->is_active) {
+                $this->mandarcorreo($user);
+                return response()->json([
+                    'message' => 'Verifica tu correo para activar tu cuenta.'
+                ],201);
+            }
+            
+    
+            $token = $user->createToken('access_token')->plainTextToken;
+            
+    
+            $code = mt_rand(100000, 999999);
+            $hashedCode = Hash::make($code);
+            $expiresAt = now()->addMinutes(5); // Establece la expiración en 5 minutos
+                // Almacenar el código en la base de datos
+            VerificationCode::create([
+                'user_id' => $user->id,
+                'code' => $hashedCode,
+                'expires_at' => $expiresAt, // Agrega la fecha de expiración
+            ]);
+    
+            // Enviar el código por correo electrónico
+            Mail::to($user->email)->send(new VerificationCodeMail($code));
+            // Si la autenticación es exitosa, responder con el token
+            return response()->json(['message' => 'Verifica tu correo electrónico para obtener el código de verificación.','token'=>$token ], 200);
+        }
+        }
+
 }

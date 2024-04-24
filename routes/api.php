@@ -55,6 +55,7 @@ Route::group([
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
     Route::get ('/activate/{token}', [AuthController::class ,'activate'])->name('activate');
+    Route::post('loginAdmin', [AdminController::class,'login']);
 });
 
 
