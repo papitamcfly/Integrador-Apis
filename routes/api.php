@@ -22,6 +22,7 @@ use App\Http\Controllers\IngresosController;
 use App\Http\Controllers\MesaController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\logsController;
+use App\Http\Controllers\MeseroController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,8 +113,11 @@ Route::put('/usuarios/{combo}', [usuarioscontroller::class, 'update'])->where('c
 Route::delete('/usuarios/{combo}', [usuarioscontroller::class, 'destroy'])->where('combo', '[0-9]+')->name('deleteusuarios');
 });
 
-Route::middleware(['auth:api', RoleMiddleware::class . ':1,3'])->group(function (){
+Route::middleware(['auth:api', RoleMiddleware::class . ':3'])->group(function (){
     Route::get ('/logs', [logsController::class ,'index']);
     Route::get ('/logs/{mesero}', [logsController::class ,'showRecent'])->where('mesero', '[0-9]+');});
     Route::get ('/meseros', [logsController::class ,'MostrarMeseros']);
+    Route::post ('/createMeseros', [MeseroController::class ,'store']);
+    Route::put('/updateMeseros', [MeseroController::class ,'update']);
+    Route::delete('/deleteMeseros', [MeseroController::class ,'delete']);
     Route::get ('/sensores', [logsController::class ,'MostrarSensores']);
