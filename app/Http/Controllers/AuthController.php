@@ -259,17 +259,10 @@ class AuthController extends Controller
         if ($user->is_active  == 0) {
             $user->is_active = 1;
             $user->save();
- 
-            return response()->json([
-                'success' => true,
-                'message' => 'Account activated successfully.',
-            ]);
+            return view('emails.EmailVerificationSuccessView');
         }
  
-        return response()->json([
-            'success' => false,
-            'message' => 'Account is already activated.',
-        ]);
+        return view('emails.EmailVerificationErrorView');
     }
 
     
