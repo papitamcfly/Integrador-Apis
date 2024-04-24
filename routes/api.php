@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\IngresosController;
 use App\Http\Controllers\MesaController;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::group([
 
 ], function ($router) {
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('registerAdmin', [AdminController::class,'register']);
     Route::post('mandarcorreo', [AuthController::class, 'mandarcorreo']);
     Route::post('verify-code', 'AuthController@verifyCode')->name('verifyCode');
     Route::post('login', 'AuthController@login');
