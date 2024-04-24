@@ -75,7 +75,6 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':1,2,3'])->group(functio
 
 Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () {
     Route::get('/roles',[usuarioscontroller::class,'showroles']);
-    Route::get('/logs',[usuarioscontroller::class,'logs']);
     Route::post('activateUser/{id}', [usuarioscontroller::class, 'activateUser'])->where('id', '[0-9]+')->name('activateUser');
     Route::post('deactivateUser/{id}', [usuarioscontroller::class, 'deactivateUser'])->where('id', '[0-9]+')->name('deactivateUser');
 });
