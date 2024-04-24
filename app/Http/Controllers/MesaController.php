@@ -12,7 +12,7 @@ class MesaController extends Controller
     public function index()
     {
         $mesas = Mesa::all();
-        return Response::json($mesas);
+        return response()->json($mesas);
     }
 
     public function store(Request $request)
@@ -26,20 +26,20 @@ class MesaController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return Response::json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors()], 422);
         }
 
         $validatedData = $validator->validated();
         $mesa = new Mesa($validatedData);
         $mesa->save();
 
-        return Response::json($mesa, 201);
+        return response()->json($mesa, 201);
     }
 
     public function show($id)
     {
         $mesa = Mesa::findOrFail($id);
-        return Response::json($mesa);
+        return response()->json($mesa);
     }
 
     public function update(Request $request, $id)
@@ -50,13 +50,13 @@ class MesaController extends Controller
         ]);
 
         $mesa->update($validatedData);
-        return Response::json($mesa);
+        return response()->json($mesa);
     }
 
     public function destroy($id)
     {
         $mesa = Mesa::findOrFail($id);
         $mesa->delete();
-        return Response::json(['message' => 'Mesa eliminada exitosamente.']);
+        return response()->json(['message' => 'Mesa eliminada exitosamente.']);
     }
 }
