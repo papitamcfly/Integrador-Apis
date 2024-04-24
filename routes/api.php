@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\IngresosController;
+use App\Http\Controllers\MesaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,4 +100,11 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function 
     Route::get('/mesas/{mesa}', [MesaController::class, 'show'])->name('mesas.show')->where('mesa', '[0-9]+');
     Route::put('/mesas/{mesa}', [MesaController::class, 'update'])->name('mesas.update')->where('mesa', '[0-9]+');
     Route::delete('/mesas/{mesa}', [MesaController::class, 'destroy'])->name('mesas.destroy')->where('mesa', '[0-9]+');
+});
+Route::middleware(['auth:api', RoleMiddleware::class . ':2,3'])->group(function () {
+Route::get('/usuarios', [usuarioscontroller::class, 'index'])->name('allusuarios');
+Route::post('/usuarios', [usuarioscontroller::class, 'store'])->name('createusuarios');
+Route::get('/usuarios/{combo}', [usuarioscontroller::class, 'show'])->where('combo', '[0-9]+')->name('showusuarios');
+Route::put('/usuarios/{combo}', [usuarioscontroller::class, 'update'])->where('combo', '[0-9]+')->name('updateusuarios');
+Route::delete('/usuarios/{combo}', [usuarioscontroller::class, 'destroy'])->where('combo', '[0-9]+')->name('deleteusuarios');
 });
