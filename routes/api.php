@@ -118,7 +118,8 @@ Route::middleware(['auth:api', RoleMiddleware::class . ':3'])->group(function ()
     Route::get ('/logs/{mesero}', [logsController::class ,'showRecent'])->where('mesero', '[0-9]+');
     Route::get ('/meseros', [logsController::class ,'MostrarMeseros']);
     Route::post ('/createMeseros', [MeseroController::class ,'store']);
-    Route::put('/updateMesero/{mesero}', [MeseroController::class ,'update']);
+    Route::put('/updateMeseros/{id}', [MeseroController::class ,'update']);
+    Route::get('/showmesero/{id}', [MeseroController::class ,'show']);
     Route::delete('/deleteMesero/{mesero}', [MeseroController::class ,'destroy']);
     Route::get ('/sensores', [logsController::class ,'MostrarSensores']);
 });

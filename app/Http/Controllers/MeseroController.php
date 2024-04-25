@@ -43,32 +43,35 @@ class MeseroController extends Controller
 
     public function show($id)
     {
-        $mesero = meseros::findOrFail($id);
+        $id= intval($id);
+        $mesero = meseros::where('Id', $id)->first();
         return response()->json($mesero);
     }
 
     public function update(Request $request, $id)
     {
-        $mesero = meseros::findOrFail($id);
-
+        // Validar los datos de entrada
         $validatedData = $request->validate([
-            'nombre' => 'nullable|string',
+            'nombre' => 'required|string',
         ]);
-
+        $id= intval($id);
+        // Buscar el mesero por su ID
+        $mesero = meseros::where('Id', $id)->first();
+    
+        // Verificar si se encontró el mesero
+        if (!$mesero) {
+            return response()->json(['error' => 'Mesero no encontrado'], 404);
+        }
+    
+        // Actualizar los datos del mesero
         $mesero->update($validatedData);
-
+    
         return response()->json($mesero);
     }
 
     public function destroy($id)
     {
-        $id = intval($id);
-        $mesero = meseros::where('Id', $id)->first();
-
-        if (!$mesero) {
-            return response()->json(['message' => 'Mesero no encontrado.'], 404);
-        }
-
+        $mesero = meseros::findOrFail($id);
         $mesero->delete();
 
         return response()->json(['message' => 'Mesero eliminado exitosamente.']);
