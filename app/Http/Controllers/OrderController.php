@@ -76,6 +76,9 @@ class OrderController extends Controller
                     ]
                 ],
                 [
+                    '$sort'=> ['fecha'=> -1] 
+                ],
+                [
                     '$group'=> [
                         '_id'=> '$status',
                         'ordenes'=>[
