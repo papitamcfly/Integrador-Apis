@@ -10,19 +10,6 @@ class  meseros extends Model
     use HasFactory;
 
     protected $connection = 'mongodb';
-
-    protected $collection = 'meseros';
-
-    protected $fillable = [
-        'id',
-        'userId',
-        'nombre',
-    ];
-
-    public $incrementing = false;
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'userId');
-    }
+    public $timestamps = false;
+    protected $collection = 'mesero';
 }
