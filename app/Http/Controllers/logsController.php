@@ -27,8 +27,9 @@ class logsController extends Controller
                         'data' => ['$first' => '$$ROOT']
                     ]
                     ],
-                    ['$replaceRoot' => ['newRoot' => '$data']],
-                    ['$sort'=>['_id'=>1]]
+                    ['$sort'=>['_id'=>1]],
+                    ['$replaceRoot' => ['newRoot' => '$data']]
+
             ]);
         });
 
