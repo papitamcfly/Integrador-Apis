@@ -20,16 +20,20 @@ class logsController extends Controller
         $logsbyrobot = Data::raw(function ($collection) use ($mesero) {
             return $collection->aggregate([
                 ['$match' => ['meseroID' => (int)$mesero]], // Filtrar por meseroID
+                ['$sort' => ['identificador' => 1, 'horafecha' => -1]], // Ordenar por identificador y horafecha
                 [
                     '$group' => [
                         '_id' => '$identificador',
                         'data' => ['$first' => '$$ROOT']
                     ]
                     ],
-                    ['$sort' => ['_id' => 1]],
+                    ['$replaceRoot' => ['newRoot' => '$data']],
 
             ]);
         });
+
+        
+          
         return response()->json($logsbyrobot);
     }
     public function MostrarMeseros(){
