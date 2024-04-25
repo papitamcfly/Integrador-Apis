@@ -28,7 +28,7 @@ class logsController extends Controller
                     ]
                     ],
                     ['$replaceRoot' => ['newRoot' => '$data']],
-
+                    ['$sort'=>['_id'=>1]]
             ]);
         });
 
