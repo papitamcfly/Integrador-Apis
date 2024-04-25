@@ -27,14 +27,15 @@ class MeseroController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-
-        $lastMesero = meseros::orderBy('id', 'desc')->first();
-        $nextMeseroId = $lastMesero ? $lastMesero->id + 1 : 1;
+        $user = auth()->user();
+        $userId = $user ? $user->id : null;
+        $lastMesero = meseros::orderBy('Id', 'desc')->first();
+        $nextMeseroId = $lastMesero ? $lastMesero->Id + 1 : 1;
 
         $mesero = new meseros();
         $mesero->Id = $nextMeseroId;
         $mesero->Nombre = $request->nombre;
-        $mesero->UsuarioID = Auth::id();
+        $mesero->UsuarioID = $userId;
         $mesero->save();
 
         return response()->json($mesero, 201);
