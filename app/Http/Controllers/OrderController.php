@@ -76,7 +76,7 @@ class OrderController extends Controller
                     ]
                 ],
                 [
-                    '$sort'=> ['fecha'=> -1] 
+                    '$sort'=> ['fecha'=> -1,'hora'=> -1] 
                 ],
                 [
                     '$group'=> [
