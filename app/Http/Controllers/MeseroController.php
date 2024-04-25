@@ -19,9 +19,9 @@ class MeseroController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string',
+            'Nombre' => 'required|string',
         ], [
-            'nombre.required' => 'El campo nombre es obligatorio.',
+            'Nombre.required' => 'El campo nombre es obligatorio.',
         ]);
 
         if ($validator->fails()) {
@@ -34,7 +34,7 @@ class MeseroController extends Controller
 
         $mesero = new meseros();
         $mesero->Id = $nextMeseroId;
-        $mesero->Nombre = $request->nombre;
+        $mesero->Nombre = $request->Nombre;
         $mesero->UsuarioID = $userId;
         $mesero->save();
 
@@ -52,7 +52,7 @@ class MeseroController extends Controller
     {
         // Validar los datos de entrada
         $validatedData = $request->validate([
-            'nombre' => 'required|string',
+            'Nombre' => 'required|string',
         ]);
         $id= intval($id);
         // Buscar el mesero por su ID
@@ -64,7 +64,8 @@ class MeseroController extends Controller
         }
     
         // Actualizar los datos del mesero
-        $mesero->update($validatedData);
+        $mesero->Nombre = $validatedData['Nombre'];
+        $mesero->save();
     
         return response()->json($mesero);
     }
