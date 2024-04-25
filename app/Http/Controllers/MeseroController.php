@@ -62,7 +62,13 @@ class MeseroController extends Controller
 
     public function destroy($id)
     {
-        $mesero = meseros::findOrFail($id);
+        $id = intval($id);
+        $mesero = meseros::where('Id', $id)->first();
+
+        if (!$mesero) {
+            return response()->json(['message' => 'Mesero no encontrado.'], 404);
+        }
+
         $mesero->delete();
 
         return response()->json(['message' => 'Mesero eliminado exitosamente.']);
