@@ -16,11 +16,11 @@ class usuarioscontroller extends Controller
     public function index()
     {
 
-        $boletos = User::all();
+        $usuarios = User::all();
         $user = auth()->user();
         $userId = $user ? $user->id : null;
     
-        return response()->json($boletos, 200);
+        return response()->json($usuarios, 200);
     }
 
     
