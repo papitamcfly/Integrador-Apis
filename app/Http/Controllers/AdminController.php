@@ -101,5 +101,18 @@ class AdminController extends Controller
             return response()->json(['message' => 'Verifica tu correo electrónico para obtener el código de verificación.','token'=>$token ], 200);
         }
         }
+        public function mandarcorreo($user)
+        {
+            
+            $url = URL::temporarySignedRoute(
+                'activate', now()->addMinutes(30)
+            );
+    
+            Mail::to($user->email)->send(new AccountActivationMail($url));
+                    return response()->json([
+                'message' => 'Verifica tu correo para activar tu cuenta.'
+            ],201);
+        }
+    
 
 }
