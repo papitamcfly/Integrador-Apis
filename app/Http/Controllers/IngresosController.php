@@ -136,7 +136,8 @@ class IngresosController extends Controller
                     'totalIngresos' => ['$sum' => ['$multiply' => [
                         ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
                         ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
-                    ]]]
+                    ]]],
+                    'totalQuantity' => ['$sum' => '$detalles.quantity']
                 ]],
                 ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
@@ -144,7 +145,8 @@ class IngresosController extends Controller
                     'productos' => [
                         '$push' => [
                             'producto' => '$_id.producto',
-                            'totalIngresos' => '$totalIngresos'
+                            'totalIngresos' => '$totalIngresos',
+                            'totalQuantity' => '$totalQuantity'
                         ]
                     ],
                 ]],
@@ -178,7 +180,8 @@ class IngresosController extends Controller
                     'totalIngresos' => ['$sum' => ['$multiply' => [
                         ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
                         ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
-                    ]]]
+                    ]]],
+                    'totalQuantity' => ['$sum' => '$detalles.quantity']
                 ]],
                 ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
@@ -186,7 +189,8 @@ class IngresosController extends Controller
                     'productos' => [
                         '$push' => [
                             'producto' => '$_id.producto',
-                            'totalIngresos' => '$totalIngresos'
+                            'totalIngresos' => '$totalIngresos',
+                            'totalQuantity' => '$totalQuantity'
                         ]
                     ],
                 ]],
@@ -220,7 +224,8 @@ class IngresosController extends Controller
                     'totalIngresos' => ['$sum' => ['$multiply' => [
                         ['$convert' => ['input' => '$detalles.quantity', 'to' => 'double']],
                         ['$convert' => ['input' => '$producto.price', 'to' => 'double']]
-                    ]]]
+                    ]]],
+                    'totalQuantity' => ['$sum' => '$detalles.quantity']
                 ]],
                 ['$sort' => ['totalIngresos' => -1]],
                 ['$group' => [
@@ -228,7 +233,8 @@ class IngresosController extends Controller
                     'productos' => [
                         '$push' => [
                             'producto' => '$_id.producto',
-                            'totalIngresos' => '$totalIngresos'
+                            'totalIngresos' => '$totalIngresos',
+                            'totalQuantity' => '$totalQuantity'
                         ]
                     ],
                 ]],
