@@ -125,7 +125,7 @@ class OrderController extends Controller
                     'quantity' => $item['quantity'],
                     'price' => $price, // Example: Fetching price as well
                 ];
-                $total += $product->price;
+                $total += $price;
             }
         }
         Log::info($date);

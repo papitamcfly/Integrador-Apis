@@ -28,7 +28,7 @@
                                 <tr>
                                     <td style="border-bottom: 1px solid #ddd; padding: 8px; text-align: left;">{{ $product['quantity'] }}</td>
                                     <td style="border-bottom: 1px solid #ddd; padding: 8px; text-align: left;">{{ $product['name'] }}</td>
-                                    <td style="border-bottom: 1px solid #ddd; padding: 8px; text-align: left;">{{ $product['price'] }}</td>
+                                    <td style="border-bottom: 1px solid #ddd; padding: 8px; text-align: left;">${{ $product['price'] }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -36,7 +36,7 @@
                             <tr>
                                 <td style="padding: 8px; text-align: left;">Total</td>
                                 <td></td>
-                                <td style="padding: 8px; text-align: left;">{{$total}}</td>
+                                <td style="padding: 8px; text-align: left;">${{$total}}</td>
                             </tr>
                         </tfoot>
                     </table>
