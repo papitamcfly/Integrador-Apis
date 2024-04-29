@@ -79,6 +79,9 @@ Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () 
     Route::post('activateUser/{id}', [usuarioscontroller::class, 'activateUser'])->where('id', '[0-9]+')->name('activateUser');
     Route::post('deactivateUser/{id}', [usuarioscontroller::class, 'deactivateUser'])->where('id', '[0-9]+')->name('deactivateUser');
 });
+Route::middleware(['auth:api',RoleMiddleware::class . ':1,3'])->group(function (){
+    Route::get('/roles',[usuarioscontroller::class,'showroles']);
+});
 
 Route::middleware(['auth:api',RoleMiddleware::class . ':3'])->group(function () {;
 });
@@ -113,7 +116,6 @@ Route::delete('/usuarios/{combo}', [usuarioscontroller::class, 'destroy'])->wher
 });
 
 Route::middleware(['auth:api', RoleMiddleware::class . ':3'])->group(function (){
-    Route::get('/roles',[usuarioscontroller::class,'showroles']);
     Route::get ('/logs', [logsController::class ,'index']);
     Route::get ('/logs/{mesero}', [logsController::class ,'showRecent'])->where('mesero', '[0-9]+');
     Route::get ('/meseros', [logsController::class ,'MostrarMeseros']);
